@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { getFilteredTimeSeries, fetchData } from "./Api";
 import { rawData, csv } from "./__fixtures__/data";
 
@@ -35,6 +36,21 @@ test("populates data sources", (done) => {
   );
 });
 
+test("populates data with coerced numbers", (done) => {
+  const fetchTextMock = Promise.resolve(csv);
+  const fetchMock = Promise.resolve({
+    text: () => fetchTextMock,
+  });
+  jest.spyOn(global, "fetch").mockImplementation(() => fetchMock);
+
+  fetchData().then(({ data }) => {
+    expect(
+      _.every(data, (row) => _.isFinite(row[3]) && _.isFinite(row[4]))
+    ).toBe(true);
+    done();
+  });
+});
+
 test("gets filtered data", () => {
   const series = getFilteredTimeSeries(rawData, {
     dataSources: ["Facebook Ads", "Google Adwords"],
@@ -46,7 +62,9 @@ test("gets filtered data", () => {
   });
 
   expect(series).toEqual([
-    ["01.01.2019", 14, 725],
-    ["02.01.2019", 18, 829],
+    { time: "01.01.2019", clicks: 14, impressions: 725 },
+    { time: "02.01.2019", clicks: 18, impressions: 829 },
   ]);
 });
+
+test("gets unfiltered data when no filters applied", () => {});

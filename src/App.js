@@ -1,9 +1,10 @@
-import React from "react";
-import { Container, Grid, Paper, Box, makeStyles } from "@material-ui/core";
-// import Link from "@material-ui/core/Link";
+import React, { useEffect, useState, useMemo } from "react";
+import { Container, Grid, Paper, makeStyles } from "@material-ui/core";
+
 import "./App.css";
 import FilterPanel from "./components/FilterPanel";
 import DataVisualizer from "./components/DataVisualizer";
+import * as Api from "./data/Api";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -21,25 +22,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function App() {
+export default function App() {
   const classes = useStyles();
+  const [dataSources, setDataSources] = useState({});
+  const [data, setData] = useState([]);
+  const [filters, setFilters] = useState({
+    dataSources: [],
+    campaigns: [],
+  });
+  const filteredData = useMemo(() => {
+    return Api.getFilteredTimeSeries(data, filters);
+  }, [filters, data]);
+
+  useEffect(() => {
+    Api.fetchData().then(({ data, dataSources }) => {
+      setData(data);
+      setDataSources(dataSources);
+    });
+  }, [setData, setDataSources]);
 
   return (
     <Container maxWidth="lg" className={classes.container}>
-      <Grid container spacing="3">
-        <Grid item xs="3">
+      <Grid container spacing={3}>
+        <Grid item xs={3}>
           <Paper className={classes.panel}>
-            <FilterPanel></FilterPanel>
+            <FilterPanel dataSources={dataSources}></FilterPanel>
           </Paper>
         </Grid>
-        <Grid item xs="9">
+        <Grid item xs={9}>
           <Paper className={classes.visualizer}>
-            <DataVisualizer></DataVisualizer>
+            <DataVisualizer data={filteredData}></DataVisualizer>
           </Paper>
         </Grid>
       </Grid>
     </Container>
   );
 }
-
-export default App;

@@ -14,23 +14,58 @@ export function fetchData() {
     .then(parse);
 }
 
-export function getFilteredTimeSeries(data, { dataSources, campaigns }) {
+export function getFilteredTimeSeries(
+  data,
+  { dataSources, campaigns } = {
+    dataSources: [],
+    campaigns: [],
+  }
+) {
   return _.chain(data)
     .filter(([_, source, campaign]) => {
-      return dataSources.includes(source) && campaigns.includes(campaign);
+      return (
+        belongsToCategories(dataSources, source) &&
+        belongsToCategories(campaigns, campaign)
+      );
     })
     .groupBy(TIME_IDX)
     .map((rows, key) => {
       const summedClicks = _.sumBy(rows, CLICKS_IDX);
       const summedImpressions = _.sumBy(rows, IMPRESS_IDX);
-      return [key, summedClicks, summedImpressions];
+      return {
+        time: key,
+        clicks: summedClicks,
+        impressions: summedImpressions,
+      };
     })
     .value();
 }
 
+/**
+ * Checks if `what` is in the list of provided `categories`.
+ * In case categories are empty we assume that all cats are taken into
+ * consideration
+ */
+function belongsToCategories(categories, what) {
+  if (_.isEmpty(categories)) return true;
+  return categories.includes(what);
+}
+
 function parse(dataStr) {
   const csvRows = dataStr.trim().split(/\r?\n/);
-  const data = _.map(csvRows.slice(1, csvRows.length), (row) => row.split(","));
+  const data = _.chain(csvRows.slice(1, csvRows.length))
+    .map((row) => {
+      const [time, ds, impr, clicks, impressions] = row.split(",");
+      const isoTime = time.split(".").reverse().join("-");
+      return [
+        isoTime,
+        ds,
+        impr,
+        parseInt(clicks) || 0,
+        parseInt(impressions) || 0,
+      ];
+    })
+    .value();
 
   const dataSources = _.chain(data)
     .groupBy(SOURCE_IDX)
