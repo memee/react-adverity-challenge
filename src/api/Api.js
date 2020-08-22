@@ -52,6 +52,11 @@ function belongsToCategories(categories, what) {
   return categories.includes(what);
 }
 
+/**
+ * It parses csv file and builds a data structure grouped by
+ * data source. Each grouping has relevant campaigns assigned to it.
+ * @param {*} dataStr - raw string with csv
+ */
 function parse(dataStr) {
   const csvRows = dataStr.trim().split(/\r?\n/);
   const data = _.chain(csvRows.slice(1, csvRows.length))
