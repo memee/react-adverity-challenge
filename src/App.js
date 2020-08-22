@@ -4,7 +4,7 @@ import { Container, Grid, Paper, makeStyles } from "@material-ui/core";
 import "./App.css";
 import FilterPanel from "./components/FilterPanel";
 import DataVisualizer from "./components/DataVisualizer";
-import * as Api from "./data/Api";
+import * as Api from "./api/Api";
 
 const useStyles = makeStyles((theme) => ({
   container: {
