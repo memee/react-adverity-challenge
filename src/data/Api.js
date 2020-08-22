@@ -8,7 +8,8 @@ const IMPRESS_IDX = 4;
 
 export function fetchData() {
   return fetch(
-    "http://adverity-challenge.s3-website-eu-west-1.amazonaws.com/DAMKBAoDBwoDBAkOBAYFCw.csv"
+    // "http://adverity-challenge.s3-website-eu-west-1.amazonaws.com/DAMKBAoDBwoDBAkOBAYFCw.csv"
+    "http://localhost:3000/data.csv"
   )
     .then((response) => response.text())
     .then(parse);
@@ -73,9 +74,12 @@ function parse(dataStr) {
       return _.reduce(
         data,
         (acc, curr) => {
+          if (!acc.campaigns.includes(curr[CAMPAIGN_IDX])) {
+            acc.campaigns.push(curr[CAMPAIGN_IDX]);
+          }
           return {
             label: source,
-            campaigns: _.uniq([...acc.campaigns, curr[CAMPAIGN_IDX]]),
+            campaigns: [],
           };
         },
         { campaigns: [] }
