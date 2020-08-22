@@ -11,7 +11,13 @@ export function fetchData() {
     "http://adverity-challenge.s3-website-eu-west-1.amazonaws.com/DAMKBAoDBwoDBAkOBAYFCw.csv"
     // "http://localhost:3000/data.csv"
   )
-    .then((response) => response.text())
+    .then((response) => {
+      if (!response.ok) {
+        return "";
+      } else {
+        return response.text();
+      }
+    })
     .then(parse);
 }
 

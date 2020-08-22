@@ -75,7 +75,6 @@ export default function FilterControl({ items, label, onApply, initial = [] }) {
         <Button
           variant="contained"
           color="primary"
-          limitTags={2}
           disabled={applyDisabled}
           className={classes.button}
           onClick={() => onApply(selected)}

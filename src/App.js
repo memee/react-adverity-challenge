@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Container, Grid, Paper, makeStyles } from "@material-ui/core";
+import _ from "lodash";
 
 import "./App.css";
 import FilterPanel from "./components/FilterPanel";
@@ -54,10 +55,14 @@ export default function App() {
         </Grid>
         <Grid item xs={9}>
           <Paper className={classes.visualizer}>
-            <DataVisualizer
-              data={filteredData}
-              filters={filters}
-            ></DataVisualizer>
+            {_.isEmpty(data) ? (
+              <h2>No data!</h2>
+            ) : (
+              <DataVisualizer
+                data={filteredData}
+                filters={filters}
+              ></DataVisualizer>
+            )}
           </Paper>
         </Grid>
       </Grid>

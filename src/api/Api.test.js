@@ -6,6 +6,7 @@ test("populates data sources", (done) => {
   const fetchTextMock = Promise.resolve(csv);
   const fetchMock = Promise.resolve({
     text: () => fetchTextMock,
+    ok: true,
   });
   jest.spyOn(global, "fetch").mockImplementation(() => fetchMock);
 
@@ -53,6 +54,18 @@ test("populates data with coerced numbers", (done) => {
     done();
   });
 });
+
+// test("handles http errors", (done) => {
+//   const fetchMock = Promise.reject("error");
+
+//   jest.spyOn(global, "fetch").mockImplementation(() => fetchMock);
+
+//   fetchData().then(({ data, dataSources }) => {
+//     expect(data).toEqual([]);
+//     expect(dataSources).toEqual([]);
+//     done();
+//   });
+// });
 
 test("gets filtered data", () => {
   const series = getFilteredTimeSeries(rawData, {
