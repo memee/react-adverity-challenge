@@ -11,13 +11,16 @@ test("populates data sources", (done) => {
 
   const expected = [
     {
-      "Facebook Ads": ["Like Ads", "Offer Campaigns - Conversions"],
+      label: "Facebook Ads",
+      campaigns: ["Like Ads", "Offer Campaigns - Conversions"],
     },
     {
-      "Google Adwords": ["B2B - Leads", "New General Campaign - AUS - Mobile"],
+      label: "Google Adwords",
+      campaigns: ["B2B - Leads", "New General Campaign - AUS - Mobile"],
     },
     {
-      Mailchimp: [
+      label: "Mailchimp",
+      campaigns: [
         "NY Offer 2019 | Extension Buyers | Switch To Lifetime (ABD) #2",
         "NY Offer 2019 | Extension Buyers | Switch To Lifetime (MSK) #2",
         "New Years Offer 2019 | Open Cart #5",

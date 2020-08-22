@@ -73,9 +73,12 @@ function parse(dataStr) {
       return _.reduce(
         data,
         (acc, curr) => {
-          return { [source]: _.uniq([...acc[source], curr[CAMPAIGN_IDX]]) };
+          return {
+            label: source,
+            campaigns: _.uniq([...acc.campaigns, curr[CAMPAIGN_IDX]]),
+          };
         },
-        { [source]: [] }
+        { campaigns: [] }
       );
     })
     .value();

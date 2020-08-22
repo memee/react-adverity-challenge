@@ -1,30 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+
+import _ from "lodash";
 
 import { makeStyles } from "@material-ui/core/styles";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
 import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
+import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 120,
-    maxWidth: 300,
   },
   chips: {
     display: "flex",
@@ -45,41 +32,51 @@ export default function FilterControl({ items, label, onApply, initial = [] }) {
   const classes = useStyles();
   const [selected, setSelected] = useState(initial);
 
-  const handleChange = (event) => {
-    setSelected(event.target.value);
+  const handleChange = (_, newValue) => {
+    setSelected(newValue);
   };
+
+  const applyDisabled = useMemo(() => {
+    return _.isEqual(selected, initial);
+  }, [selected, initial]);
 
   return (
     <>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="demo-mutiple-chip-label">{label}</InputLabel>
-        <Select
-          labelId="demo-mutiple-chip-label"
-          id="demo-mutiple-chip"
+      <FormControl className={classes.formControl} fullWidth={true}>
+        <Autocomplete
           multiple
-          value={selected}
+          id="size-small-standard-multi"
+          size="small"
+          options={items}
           onChange={handleChange}
-          input={<Input id="select-multiple-chip" />}
-          renderValue={(selected) => (
-            <div className={classes.chips}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} className={classes.chip} />
-              ))}
-            </div>
+          onInputChange={handleChange}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="standard"
+              label={label}
+              placeholder={label}
+            />
           )}
-          MenuProps={MenuProps}
-        >
-          {items.map((item) => (
-            <MenuItem key={item} value={item}>
-              {item}
-            </MenuItem>
-          ))}
-        </Select>
+          renderTags={(value, getTagProps) =>
+            value.map((option, index) => (
+              <Chip
+                variant="standard"
+                className={classes.chip}
+                label={_.truncate(option, { length: 20 })}
+                size="small"
+                {...getTagProps({ index })}
+              />
+            ))
+          }
+        />
       </FormControl>
       <FormControl className={classes.formControl}>
         <Button
           variant="contained"
           color="primary"
+          limitTags={2}
+          disabled={applyDisabled}
           className={classes.button}
           onClick={() => onApply(selected)}
         >

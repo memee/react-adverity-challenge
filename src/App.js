@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
   const classes = useStyles();
-  const [dataSources, setDataSources] = useState({});
+  const [dataSources, setDataSources] = useState([]);
   const [data, setData] = useState([]);
   const [filters, setFilters] = useState({
     dataSources: [],
@@ -46,12 +46,18 @@ export default function App() {
       <Grid container spacing={3}>
         <Grid item xs={3}>
           <Paper className={classes.panel}>
-            <FilterPanel dataSources={dataSources}></FilterPanel>
+            <FilterPanel
+              dataSources={dataSources}
+              onFiltersApply={setFilters}
+            ></FilterPanel>
           </Paper>
         </Grid>
         <Grid item xs={9}>
           <Paper className={classes.visualizer}>
-            <DataVisualizer data={filteredData}></DataVisualizer>
+            <DataVisualizer
+              data={filteredData}
+              filters={filters}
+            ></DataVisualizer>
           </Paper>
         </Grid>
       </Grid>

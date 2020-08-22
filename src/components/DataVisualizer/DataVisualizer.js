@@ -1,6 +1,8 @@
 import React, { useMemo } from "react";
 import { Line } from "react-chartjs-2";
 
+import _ from "lodash";
+
 import SectionHeading from "../SectionHeading";
 
 const getChartData = (data) => {
@@ -55,12 +57,25 @@ const options = {
     },
   },
 };
+const quote = (val) => `"${val}"`;
+const stringifyFilters = (filters) =>
+  _.chain(filters).map(quote).join(" and ").value();
 
-export default function DataVisualizer({ data }) {
-  const chartData = useMemo(() => getChartData(data));
+export default function DataVisualizer({ data, filters }) {
+  const chartData = useMemo(() => getChartData(data), [data]);
+  const sourcesStr = useMemo(() => stringifyFilters(filters.dataSources), [
+    filters,
+  ]);
+  const campaignsStr = useMemo(() => stringifyFilters(filters.campaigns), [
+    filters,
+  ]);
+
   return (
     <>
-      <SectionHeading component="h2">Data viz</SectionHeading>
+      <SectionHeading component="h2">
+        {sourcesStr ? `Datasource: ${sourcesStr}` : "All sources"};&nbsp;
+        {campaignsStr ? `Campaigns: ${campaignsStr}` : "All campaigns"}
+      </SectionHeading>
       <Line data={chartData} options={options}></Line>
     </>
   );
