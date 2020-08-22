@@ -61,12 +61,12 @@ function parse(dataStr) {
   const csvRows = dataStr.trim().split(/\r?\n/);
   const data = _.chain(csvRows.slice(1, csvRows.length))
     .map((row) => {
-      const [time, ds, impr, clicks, impressions] = row.split(",");
+      const [time, ds, cmpgs, clicks, impressions] = row.split(",");
       const isoTime = time.split(".").reverse().join("-");
       return [
         isoTime,
         ds,
-        impr,
+        cmpgs,
         parseInt(clicks) || 0,
         parseInt(impressions) || 0,
       ];
