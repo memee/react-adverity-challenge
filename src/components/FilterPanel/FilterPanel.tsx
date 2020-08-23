@@ -1,16 +1,27 @@
 import React, { useCallback, useMemo, useState } from "react";
 import _ from "lodash";
 import FilterControl from "../FilterControl";
+import { Filters, FilterOptions } from "../FilterControl/FilterControl";
 import SectionHeading from "../SectionHeading";
 
-export default function FilterPanel({ dataSources, onFiltersApply }) {
-  const [sourceFilters, setSourceFilters] = useState([]);
-  const [campaignFilters, setCampaignFilters] = useState([]);
+import { DataSources, CompoundFilters } from "../../api/Api";
+
+interface FilterPanelProps {
+  dataSources: DataSources;
+  onFiltersApply: (x: CompoundFilters) => void;
+}
+
+export default function FilterPanel({
+  dataSources,
+  onFiltersApply,
+}: FilterPanelProps) {
+  const [sourceFilters, setSourceFilters] = useState([] as Filters);
+  const [campaignFilters, setCampaignFilters] = useState([] as Filters);
   const sources = useMemo(() => _.map(dataSources, (s) => s.label), [
     dataSources,
   ]);
   // available campaigns - depends on selected data sources
-  const campaigns = useMemo(
+  const campaigns: FilterOptions = useMemo(
     () =>
       _.chain(dataSources)
         .filter((src) => {
@@ -21,13 +32,13 @@ export default function FilterPanel({ dataSources, onFiltersApply }) {
         })
         .reduce((res, src) => {
           return [...res, ..._.get(src, "campaigns", [])];
-        }, [])
+        }, [] as FilterOptions)
         .value(),
     [sourceFilters, dataSources]
   );
 
   const onApplySources = useCallback(
-    (filters) => {
+    (filters: Filters) => {
       setSourceFilters(filters);
       onFiltersApply({
         dataSources: filters,
@@ -38,7 +49,7 @@ export default function FilterPanel({ dataSources, onFiltersApply }) {
   );
 
   const onApplyCampaigns = useCallback(
-    (filters) => {
+    (filters: Filters) => {
       setCampaignFilters(filters);
       onFiltersApply({
         dataSources: sourceFilters,

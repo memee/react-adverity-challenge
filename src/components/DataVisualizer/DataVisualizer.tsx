@@ -4,8 +4,9 @@ import { Line } from "react-chartjs-2";
 import _ from "lodash";
 
 import SectionHeading from "../SectionHeading";
+import { Data, CompoundFilters } from "../../api/Api";
 
-const getChartData = (data) => {
+const getChartData = (data: Data) => {
   return {
     datasets: [
       {
@@ -57,11 +58,16 @@ const options = {
     },
   },
 };
-const quote = (val) => `"${val}"`;
-const stringifyFilters = (filters) =>
+const quote = (val: string) => `"${val}"`;
+const stringifyFilters = (filters: string[]) =>
   _.chain(filters).map(quote).join(" and ").value();
 
-export default function DataVisualizer({ data, filters }) {
+interface DataVisualizerProps {
+  data: Data;
+  filters: CompoundFilters;
+}
+
+export default function DataVisualizer({ data, filters }: DataVisualizerProps) {
   const chartData = useMemo(() => getChartData(data), [data]);
   const sourcesStr = useMemo(() => stringifyFilters(filters.dataSources), [
     filters,

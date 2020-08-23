@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { ChangeEvent, useState, useMemo } from "react";
 
 import _ from "lodash";
 
@@ -8,6 +8,9 @@ import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
+
+export type Filters = string[];
+export type FilterOptions = string[];
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -28,11 +31,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function FilterControl({ items, label, onApply, initial = [] }) {
+interface FilterControlProps {
+  items: FilterOptions;
+  label: string;
+  onApply: (x: Filters) => void;
+  initial?: Filters;
+}
+
+export default function FilterControl({
+  items,
+  label,
+  onApply,
+  initial = [],
+}: FilterControlProps) {
   const classes = useStyles();
   const [selected, setSelected] = useState(initial);
 
-  const handleChange = (_, newValue) => {
+  const handleChange = (_: ChangeEvent<any>, newValue: any) => {
+    console.log(newValue, typeof newValue);
     setSelected(newValue);
   };
 
@@ -61,7 +77,7 @@ export default function FilterControl({ items, label, onApply, initial = [] }) {
           renderTags={(value, getTagProps) =>
             value.map((option, index) => (
               <Chip
-                variant="standard"
+                variant="default"
                 className={classes.chip}
                 label={_.truncate(option, { length: 20 })}
                 size="small"

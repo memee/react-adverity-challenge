@@ -8,7 +8,7 @@ test("populates data sources", (done) => {
     text: () => fetchTextMock,
     ok: true,
   });
-  jest.spyOn(global, "fetch").mockImplementation(() => fetchMock);
+  (jest.spyOn(global, "fetch") as any).mockImplementation(() => fetchMock);
 
   const expected = [
     {
@@ -45,7 +45,7 @@ test("populates data with coerced numbers", (done) => {
   const fetchMock = Promise.resolve({
     text: () => fetchTextMock,
   });
-  jest.spyOn(global, "fetch").mockImplementation(() => fetchMock);
+  (jest.spyOn(global, "fetch") as any).mockImplementation(() => fetchMock);
 
   fetchData().then(({ data }) => {
     expect(

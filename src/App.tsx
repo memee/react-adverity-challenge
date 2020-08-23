@@ -25,18 +25,18 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
   const classes = useStyles();
-  const [dataSources, setDataSources] = useState([]);
-  const [data, setData] = useState([]);
+  const [dataSources, setDataSources] = useState([] as Api.DataSources);
+  const [data, setData] = useState([] as Api.RawData[]);
   const [filters, setFilters] = useState({
     dataSources: [],
     campaigns: [],
-  });
+  } as Api.CompoundFilters);
   const filteredData = useMemo(() => {
     return Api.getFilteredTimeSeries(data, filters);
   }, [filters, data]);
 
   useEffect(() => {
-    Api.fetchData().then(({ data, dataSources }) => {
+    Api.fetchData().then(({ data, dataSources }: Api.State) => {
       setData(data);
       setDataSources(dataSources);
     });
