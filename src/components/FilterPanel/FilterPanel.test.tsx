@@ -1,7 +1,9 @@
 import React, { useState as useStateMock } from "react";
 import { shallow } from "enzyme";
 
+import { CompoundFilters } from "../../api/Api";
 import FilterPanel from "./FilterPanel";
+import { Filters } from "../FilterControl/FilterControl";
 
 jest.mock("react", () => ({
   ...jest.requireActual("react"),
@@ -9,8 +11,9 @@ jest.mock("react", () => ({
 }));
 
 describe("FilterPanel", () => {
-  let mockState;
-  const setMockState = (s) => (mockState = s);
+  let mockState: Filters;
+  const setMockState = (s: Filters) => (mockState = s);
+  const dummyOnApply: (f: CompoundFilters) => void = (f) => {};
   useStateMock.mockImplementation((_) => [mockState, setMockState]);
 
   const dataSources = Object.freeze([
@@ -26,7 +29,9 @@ describe("FilterPanel", () => {
 
     setMockState(["Facebook", "MailChimp"]);
 
-    const wrapper = shallow(<FilterPanel dataSources={dataSources} />);
+    const wrapper = shallow(
+      <FilterPanel dataSources={dataSources} onFiltersApply={dummyOnApply} />
+    );
     const campaignsControl = getCampaignsControl(wrapper);
 
     expect(campaignsControl).toHaveProp("items", expected);
@@ -37,7 +42,9 @@ describe("FilterPanel", () => {
 
     setMockState([]);
 
-    const wrapper = shallow(<FilterPanel dataSources={dataSources} />);
+    const wrapper = shallow(
+      <FilterPanel dataSources={dataSources} onFiltersApply={dummyOnApply} />
+    );
     const campaignsControl = getCampaignsControl(wrapper);
 
     expect(campaignsControl).toHaveProp("items", expected);

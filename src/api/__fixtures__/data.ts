@@ -1,3 +1,5 @@
+import { RawData } from "../Api";
+
 export const csv = `
 Date,Datasource,Campaign,Clicks,Impressions
 01.01.2019,Facebook Ads,Like Ads,274,1979
@@ -14,7 +16,7 @@ Date,Datasource,Campaign,Clicks,Impressions
 02.01.2019,Mailchimp,New Years Offer 2019 | Open Cart #5 - RH Buyers,6,
 `;
 
-export const rawData = [
+export const rawData: RawData[] = [
   ["01.01.2019", "Facebook Ads", "Like Ads", 274, 1979],
   [
     "01.01.2019",
