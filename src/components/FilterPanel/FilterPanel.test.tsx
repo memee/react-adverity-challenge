@@ -1,12 +1,12 @@
 import React, { useState as useStateMock } from "react";
-import { shallow } from "enzyme";
+import { shallow, ShallowWrapper } from "enzyme";
 
 import { CompoundFilters } from "../../api/Api";
 import FilterPanel from "./FilterPanel";
 import { Filters } from "../FilterControl/FilterControl";
 
 jest.mock("react", () => ({
-  ...jest.requireActual("react"),
+  ...(jest.requireActual("react") as any),
   useState: jest.fn(),
 }));
 
@@ -14,14 +14,17 @@ describe("FilterPanel", () => {
   let mockState: Filters;
   const setMockState = (s: Filters) => (mockState = s);
   const dummyOnApply: (f: CompoundFilters) => void = (f) => {};
-  useStateMock.mockImplementation((_) => [mockState, setMockState]);
+  (useStateMock as jest.Mock<any>).mockImplementation((_) => [
+    mockState,
+    setMockState,
+  ]);
 
   const dataSources = Object.freeze([
     { label: "Facebook", campaigns: ["a", "b", "c"] },
     { label: "Google", campaigns: ["d", "e", "f"] },
     { label: "MailChimp", campaigns: ["g", "h", "i"] },
   ]);
-  const getCampaignsControl = (wrapper) =>
+  const getCampaignsControl = (wrapper: ShallowWrapper) =>
     wrapper.findWhere((n) => n.prop("label") === "Campaigns");
 
   it("should populate campaign choices based on selected sources", () => {
