@@ -31,17 +31,22 @@ export interface State {
 }
 
 export function fetchData() {
-  return fetch(
-    "http://adverity-challenge.s3-website-eu-west-1.amazonaws.com/DAMKBAoDBwoDBAkOBAYFCw.csv"
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return "";
-      } else {
-        return response.text();
-      }
-    })
-    .then(parse);
+  return (
+    fetch(
+      "http://adverity-challenge.s3-website-eu-west-1.amazonaws.com/DAMKBAoDBwoDBAkOBAYFCw.csv"
+    )
+      .then((response) => {
+        // handle http errors
+        if (!response.ok) {
+          return "";
+        } else {
+          return response.text();
+        }
+      })
+      // handle network failure
+      .catch(() => "")
+      .then(parse)
+  );
 }
 
 export interface CompoundFilters {

@@ -55,17 +55,17 @@ test("populates data with coerced numbers", (done) => {
   });
 });
 
-// test("handles http errors", (done) => {
-//   const fetchMock = Promise.reject("error");
+test("handles http errors", (done) => {
+  const fetchMock = Promise.reject("error");
 
-//   jest.spyOn(global, "fetch").mockImplementation(() => fetchMock);
+  jest.spyOn(global, "fetch").mockImplementation(() => fetchMock);
 
-//   fetchData().then(({ data, dataSources }) => {
-//     expect(data).toEqual([]);
-//     expect(dataSources).toEqual([]);
-//     done();
-//   });
-// });
+  fetchData().then(({ data, dataSources }) => {
+    expect(data).toEqual([]);
+    expect(dataSources).toEqual([]);
+    done();
+  });
+});
 
 test("gets filtered data", () => {
   const series = getFilteredTimeSeries(rawData, {
