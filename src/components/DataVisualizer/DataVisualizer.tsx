@@ -18,6 +18,7 @@ const getChartData = (data: Data) => {
         borderColor: "#4f7cacff",
         backgroundColor: "#4f7cac99",
         pointBackgroundColor: "#4f7cac55",
+        yAxisID: "clicks",
       },
       {
         label: "Impressions",
@@ -31,6 +32,7 @@ const getChartData = (data: Data) => {
         borderColor: "#a8dadcff",
         backgroundColor: "#a8dadc99",
         pointBackgroundColor: "#9eefe566",
+        yAxisID: "impressions",
       },
     ],
   };
@@ -49,6 +51,18 @@ const options = {
           minRotation: 50,
           maxRotation: 50,
         },
+      },
+    ],
+    yAxes: [
+      {
+        type: "linear",
+        position: "left",
+        id: "clicks",
+      },
+      {
+        type: "linear",
+        position: "right",
+        id: "impressions",
       },
     ],
   },
